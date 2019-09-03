@@ -1,10 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import contacts from './components/Contacts'
-
-import App from './App'
+import React from "react"
+import ReactDOM from "react-dom"
+import App from "./App"
+import "./index.css"
 
 ReactDOM.render(
-  <App contacts={contacts} />,
-  document.getElementById('root')
+  <App />,
+  document.getElementById("root")
 )
