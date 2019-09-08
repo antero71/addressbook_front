@@ -40,6 +40,13 @@ const App = () => {
     }
   }, [])
 
+  const Home = () => (
+    <div>
+      <h2>Addressbook app</h2>
+      login /login and add your contacts
+      </div>
+  )
+
 
   const handleLogout = async (event) => {
     event.preventDefault()
@@ -132,39 +139,34 @@ const App = () => {
         setNewEmail('')
       })
   }
+  const padding = { padding: 5 }
 
   return (
     <div>
-      <h1>Contacts</h1>
-
-      <Notification message={errorMessage} />
-
-      {user === null ?
-        loginForm() :
+      <Router>
         <div>
-          <p>{user.name} logged in</p>
-          <Togglable buttonLabel="new contact" ref={contactFormRef}>
-            <ContactForm
-              onSubmit={addContact}
-              name={newName}
-              address={newAddress}
-              email={newEmail}
-              phone={newPhone}
-              handleNameChange={handleNameChange}
-              handleAddressChange={({ target }) => setNewAddress(target.value)}
-              handleEmailChange={({ target }) => setNewEmail(target.value)}
-              handlePhoneChange={({ target }) => setNewPhone(target.value)}
-            />
-          </Togglable>
-        </div>
-      }
-      <ul>
-        {rows()}
-      </ul>
+          <div>
+            <Link style={padding} to="/">home</Link>
+            <Link style={padding} to="/contacts">contacts</Link>
+            {user
+              ? <em>{user} logged in</em>
+              : <Link to="/login">login</Link>
+            }
+          </div>
 
+          <Route exact path="/" render={() =>
+            <Home />
+          } />
+          <Route exact path="/contact" render={() =>
+            {rows()}
+          } />
+          <Route exact path="/contact/:id" render={({ match }) =>
+            <Contact contact={contactService.contactById(match.params.id)} />
+          } />
+        </div>
+      </Router>
       <Footer />
     </div>
   )
 }
-
 export default App
