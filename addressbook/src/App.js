@@ -8,10 +8,17 @@ import ContactForm from "./components/ContactForm"
 import contactService from "./services/contacts"
 import loginService from "./services/login"
 
+import {
+  BrowserRouter as Router,
+  Route, Link, Redirect, withRouter
+} from 'react-router-dom'
+
 const App = () => {
   const [contacts, setContacts] = useState([])
-  const [newContact, setNewContact] = useState("")
-  const [showAll, setShowAll] = useState(true)
+  const [newName, setNewName] = useState("")
+  const [newAddress, setNewAddress] = useState("")
+  const [newEmail, setNewEmail] = useState("")
+  const [newPhone, setNewPhone] = useState("")
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
@@ -32,6 +39,14 @@ const App = () => {
       contactService.setToken(user.token)
     }
   }, [])
+
+
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    window.localStorage.removeItem(
+      "loggedContactappUser", JSON.stringify(user)
+    )
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -55,11 +70,7 @@ const App = () => {
     }
   }
 
-  const contactsToShow = showAll
-  ? contacts
-  : contacts.filter(contact => contact.name)
-
-  const rows = () => contactsToShow.map(contact =>
+  const rows = () => contacts.map(contact => 
     <Contact
       key={contact.id}
       contact={contact}
@@ -89,8 +100,9 @@ const App = () => {
     )
   }
 
-  const handleContactChange = (event) => {
-    setNewContact(event.target.value)
+  const handleNameChange = (event) => {
+    console.log('name',event.target.value)
+    setNewName(event.target.value)
   }
 
   const contactFormRef = React.createRef()
@@ -98,16 +110,26 @@ const App = () => {
   const addContact = (event) => {
     event.preventDefault()
 
+    contactFormRef.current.toggleVisibility()
 
     const contactObject = {
-      content: newContact,
+      name: newName,
+      address: newAddress,
+      email: newEmail,
+      phone: newPhone,
+      date: new Date().toISOString(),
     }
+
+    console.log('contactObject', contactObject)
 
     contactService
       .create(contactObject)
       .then(data => {
         setContacts(contacts.concat(data))
-        setNewContact("")
+        setNewName('')
+        setNewPhone('')
+        setNewAddress('')
+        setNewEmail('')
       })
   }
 
@@ -124,18 +146,18 @@ const App = () => {
           <Togglable buttonLabel="new contact" ref={contactFormRef}>
             <ContactForm
               onSubmit={addContact}
-              value={newContact}
-              handleChange={handleContactChange}
+              name={newName}
+              address={newAddress}
+              email={newEmail}
+              phone={newPhone}
+              handleNameChange={handleNameChange}
+              handleAddressChange={({ target }) => setNewAddress(target.value)}
+              handleEmailChange={({ target }) => setNewEmail(target.value)}
+              handlePhoneChange={({ target }) => setNewPhone(target.value)}
             />
           </Togglable>
         </div>
       }
-
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? "important" : "all"}
-        </button>
-      </div>
       <ul>
         {rows()}
       </ul>

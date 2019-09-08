@@ -2,8 +2,12 @@ import React from "react"
 
 const Contact = ({ contact }) => {
   return (
-    <li>{contact.name}</li>,
-    <li>{contact.phone}</li>
+    <dl>
+    <dt>{contact.name}</dt>
+    <dd>{contact.address}</dd>
+    <dd>{contact.email}</dd>
+    <dd>{contact.phone}</dd>
+    </dl>
   )
 }
 
