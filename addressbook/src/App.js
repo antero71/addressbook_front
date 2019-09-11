@@ -100,11 +100,6 @@ const App = () => {
     )
   }
 
-  const handleNameChange = (event) => {
-    console.log('name',event.target.value)
-    setNewName(event.target.value)
-  }
-
   const contactFormRef = React.createRef()
 
   const addContact = (event) => {
@@ -150,7 +145,7 @@ const App = () => {
               address={newAddress}
               email={newEmail}
               phone={newPhone}
-              handleNameChange={handleNameChange}
+              handleNameChange={({ target }) => setNewName(target.value)}
               handleAddressChange={({ target }) => setNewAddress(target.value)}
               handleEmailChange={({ target }) => setNewEmail(target.value)}
               handlePhoneChange={({ target }) => setNewPhone(target.value)}
